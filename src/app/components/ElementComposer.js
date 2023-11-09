@@ -75,9 +75,15 @@ function Tree({ data, isParent = false, onSelect = (index) => {}, level = 0 }) {
 }
 
 export default function ElementComposer({ frameRef = useRef(null) }) {
+    // refs to inputs
     const elementTypeInput = useRef(null);
     const elementContentInput = useRef(null);
+    const elementClassInput = useRef(null);
+
+    // ref to form
     const formRef = useRef(null);
+
+    // index of next element to append (this-1 = index of last appended element)
     const elementIndex = useRef(1);
 
     // initial structure of tree on first render
@@ -133,12 +139,14 @@ export default function ElementComposer({ frameRef = useRef(null) }) {
             type: 'create-element',
             element: elementTypeInput.current.value,
             content: elementContentInput.current.value,
+            classes: elementClassInput.current.value,
             index: elementIndex.current++
         });
 
         // clear values and focus on type input
         elementTypeInput.current.value = '';
         elementContentInput.current.value = '';
+        elementClassInput.current.value = '';
         elementTypeInput.current.focus();
     }
 
@@ -157,12 +165,24 @@ export default function ElementComposer({ frameRef = useRef(null) }) {
         });
     }
 
+    function onTypeInput(event) {
+        if (event.target.value.toLowerCase() === 'text') {
+            elementClassInput.current.setAttribute('disabled', true);
+        } else {
+            elementClassInput.current.removeAttribute('disabled');
+        }
+    }
+
     return (
         <div className='composer'>
             <form ref={formRef} onSubmit={addElement} className='composer-form'>
                 <div className='input-group'>
                     <label htmlFor="elementType">Type of Element</label>
-                    <input placeholder='Element type' id='elementType' ref={elementTypeInput} />
+                    <input placeholder='Element type' id='elementType' onInput={onTypeInput} ref={elementTypeInput} />
+                </div>
+                <div className='input-group'>
+                    <label htmlFor="elementClasses">Element's Classes</label>
+                    <input placeholder='Classes' id='elementClasses' ref={elementClassInput} />
                 </div>
                 <div className='input-group'>
                     <label htmlFor="elementContent">Element's Inner Text</label>
