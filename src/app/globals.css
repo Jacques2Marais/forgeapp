@@ -14,11 +14,13 @@
 }
 
 @layer components {
-    .composer {
+    .composer, .editor {
         @apply p-8;
         @apply bg-stone-800;
         @apply h-screen;
+    }
 
+    .composer {
         .composer-form {
             @apply flex flex-col gap-2;
 
