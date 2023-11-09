@@ -31,7 +31,7 @@ function findObjectByIndex(dataArray, index) {
     }
 }
 
-function TreeNode({ isParent, data, item, index, level, onSelect }) {
+function TreeNode({ isParent, data, item, level, onSelect }) {
     // initially only parent should be opened
     const [isOpen, setOpen] = useState(isParent || containsSelected(data));
 
@@ -43,7 +43,7 @@ function TreeNode({ isParent, data, item, index, level, onSelect }) {
     }, [data]);
 
     return (
-        <li className={`${item.isSelected ? 'tree-li-selected': ''}`} key={index} style={{'--level': level}}>
+        <li className={`${item.isSelected ? 'tree-li-selected': ''}`} style={{'--level': level}}>
             <span className='tree-item-row'>
                 <button className='button-expand' onClick={() => { setOpen(!isOpen) }}>
                     <ChevronRight fill='white' size={16} strokeWidth={3} className={`${isOpen ? 'rotate-90' : ''}`} />
@@ -68,7 +68,7 @@ function Tree({ data, isParent = false, onSelect = (index) => {}, level = 0 }) {
     return (
         <>{data ? <ul>
             {data.map((item, index) => {
-                return <TreeNode isParent={isParent} data={data} item={item} index={index} level={level} onSelect={onSelect} />
+                return <TreeNode key={index} isParent={isParent} data={data} item={item} level={level} onSelect={onSelect} />
             })}
         </ul> : ''}</>
     )

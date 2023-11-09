@@ -20,6 +20,9 @@ export default function logic(currentElement, data, root) {
             // set element's index attr
             element.setAttribute("data-forge-index", index);
 
+            // add given classes to element
+            element.className = data.classes;
+
             if (currentElement.nodeType === Node.ELEMENT_NODE) {
                 // append element to currently selected element
                 currentElement.append(element);

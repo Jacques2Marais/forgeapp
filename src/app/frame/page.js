@@ -28,8 +28,11 @@ export default function Frame() {
 
 
     return (
-        <main ref={rootElement}>
+        <>
+            <script src="https://cdn.tailwindcss.com"></script>
+            <main ref={rootElement}>
 
-        </main>
+            </main>
+        </>
     )
 }
