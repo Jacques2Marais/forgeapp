@@ -1,7 +1,8 @@
 'use client';
 
 import { ChevronRight } from 'lucide-react';
-import { useEffect, useRef, useState, useReducer } from 'react';
+import { useEffect, useRef, useState, useReducer, useContext } from 'react';
+import { ElementContext } from './ElementContext';
 
 function containsSelected(dataArray) {
     for (const item of dataArray) {
@@ -75,6 +76,9 @@ function Tree({ data, isParent = false, onSelect = (index) => {}, level = 0 }) {
 }
 
 export default function ElementComposer({ frameRef = useRef(null) }) {
+    // context of current element
+    const elementContext = useContext(ElementContext);
+
     // refs to inputs
     const elementTypeInput = useRef(null);
     const elementContentInput = useRef(null);
@@ -134,14 +138,20 @@ export default function ElementComposer({ frameRef = useRef(null) }) {
         // update physical view of tree
         setTreeView(structuredClone(tree.current));
 
+        // get the entered class name
+        const className = elementClassInput.current.value;
+
         // post message of action to iframe
         frameRef.current.contentWindow.postMessage({
             type: 'create-element',
             element: elementTypeInput.current.value,
             content: elementContentInput.current.value,
-            classes: elementClassInput.current.value,
+            classes: className,
             index: elementIndex.current++
         });
+
+        // set context of initial classes
+        elementContext.setInitialClasses(className.split(" "));
 
         // clear values and focus on type input
         elementTypeInput.current.value = '';

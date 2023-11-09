@@ -37,6 +37,12 @@ export default function logic(currentElement, data, root) {
     // return element that has given forge-index (to select it)
     } else if (data.type == "select-element") {
         return getElementByIndex(root, data.index);
+    } else if (data.type == "update-element") {
+        if (typeof data.className === 'string') {
+            currentElement.className = data.className;
+        }
+
+        return currentElement;
     }
 }
 
