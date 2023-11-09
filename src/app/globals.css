@@ -2,26 +2,102 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+@layer base {
+    input, textarea, button {
+        @apply p-2;
+        @apply border rounded-md;
+    }
+
+    .input-group {
+        @apply flex flex-col gap-1;
+    }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
+@layer components {
+    .composer {
+        @apply p-8;
+        @apply bg-stone-800;
+        @apply h-screen;
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+        .composer-form {
+            @apply flex flex-col gap-2;
+
+            label {
+                @apply text-white;
+                @apply font-semibold text-sm;
+            }
+
+            button {
+                @apply bg-yellow-500 border-yellow-600 text-yellow-900;
+                @apply font-semibold text-sm;
+            }
+        }
+
+        .element-tree {
+            @apply text-white;
+            @apply mt-4;
+
+            ul:not(:first-child) {
+                /* @apply pl-4; */
+            }
+
+            li {
+                @apply my-1 pl-3;
+                @apply rounded-md;
+                @apply transition-colors;
+
+                /* padding-left: calc(var(--level) * 0.75em); */
+
+                &:hover {
+                    @apply bg-white/[0.03];
+                }
+
+                &.tree-li-selected {
+                    @apply bg-white/[0.03];
+
+                    &:hover {
+                        @apply bg-white/[0.06];
+                    }
+                }
+            }
+
+            .tree-item-row {
+                @apply flex items-center w-full;
+                @apply text-sm font-bold;
+
+                button {
+                    @apply p-1.5;
+                    @apply border-none;
+
+                    &.button-expand:hover {
+                        @apply scale-125 transition-transform;
+                    }
+                }
+
+                .tree-item-title {
+                    @apply flex-grow;
+                    @apply text-left;
+                    @apply px-1.5;
+
+                    .decorator {
+                        @apply text-white/40;
+                    }
+
+                    .name {
+                        @apply text-white/60;
+                    }
+
+                    &.tree-item-selected {
+                        .name {
+                            @apply text-white;
+                        }
+
+                        .decorator {
+                            @apply text-white/60;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
