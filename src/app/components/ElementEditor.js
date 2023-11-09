@@ -3,6 +3,7 @@
 import { useContext, useEffect } from "react";
 import { ElementContext } from "./ElementContext";
 import { classNameToArray } from "@/lib/element-utils";
+import SearchInput from "./SearchInput";
 
 export default function ElementEditor({ frameRef = useRef(null) }) {
     // context of current element
@@ -37,6 +38,7 @@ export default function ElementEditor({ frameRef = useRef(null) }) {
                 </div>
                 <button type="submit">+ Add Element</button>
             </form>
+            <SearchInput items={['one','two','three']}/>
         </div>
     )
 }

@@ -32,8 +32,6 @@
                 @apply font-semibold text-sm;
             }
         }
-        
-        
     }
 
     .composer {
@@ -97,6 +95,18 @@
                         }
                     }
                 }
+            }
+        }
+    }
+
+    .search-input {
+        .search-results {
+            @apply flex flex-col;
+            @apply bg-white;
+            @apply rounded-md;
+
+            button {
+                @apply p-2;
             }
         }
     }
