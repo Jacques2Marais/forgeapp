@@ -6,6 +6,10 @@
     input, textarea, button {
         @apply p-2;
         @apply border rounded-md;
+
+        &:active, &:focus, &:focus-visible {
+            @apply outline-[3px] outline-yellow-600 outline;
+        }
     }
 
     .input-group {
@@ -27,7 +31,8 @@
                 @apply font-semibold text-sm;
             }
 
-            button {
+            button[type='submit'] {
+                @apply mt-1;
                 @apply bg-yellow-500 border-yellow-600 text-yellow-900;
                 @apply font-semibold text-sm;
             }
@@ -99,14 +104,80 @@
         }
     }
 
+    /* the SearchInput component */
     .search-input {
+        @apply relative;
+
+        input {
+            @apply w-full box-border;
+        }
+
+        &.results-visible > input {
+            @apply rounded-b-none;
+
+            &:active, &:focus, &:focus-visible {
+                @apply outline-none;
+                box-shadow: -3px 0px 0px 0px theme(colors.yellow.600), 3px 0px 0px 0px theme(colors.yellow.600), 0px -3px 0px 0px theme(colors.yellow.600);
+            }
+        }
+
+        /* the small icon on the right of the SearchInput component */
+        .search-chevron {
+            @apply stroke-stone-300 transition-colors;
+            @apply absolute right-2 top-3;
+            @apply pointer-events-none;
+
+            &.show-results {
+                @apply stroke-stone-500;
+            }
+        }
+
+        /* for the SearchInput results */
         .search-results {
             @apply flex flex-col;
             @apply bg-white;
-            @apply rounded-md;
+            box-shadow: -3px 0px 0px 0px theme(colors.yellow.600), 3px 0px 0px 0px theme(colors.yellow.600), 0px 3px 0px 0px theme(colors.yellow.600);
+            @apply rounded-md rounded-t-none;
+            /* @apply mt-1.5; */
+            @apply absolute z-10 w-full;
 
             button {
-                @apply p-2;
+                @apply px-3 py-2;
+                @apply text-left;
+                @apply border-none;
+
+                &:hover, &.search-result-focused {
+                    @apply bg-stone-100;
+                }
+            }
+
+            span {
+                @apply px-2.5 pt-1.5 pb-1;
+                @apply text-xs text-stone-600;
+            }
+        }
+    }
+
+    .tooltip {
+        @apply absolute z-50;
+        @apply px-3 py-2;
+        @apply bg-stone-200 border-stone-300 border;
+        @apply rounded-md;
+
+        /* for popup tooltips to tailwind classnames to explain their usage */
+        .css-rule {
+            @apply block;
+            @apply max-w-xs break-words leading-[22px];
+            @apply my-0.5 pl-4 -indent-4;
+            @apply text-stone-400;
+
+            .css-rule-name {
+                @apply flex-grow;
+                @apply text-stone-600;
+            }
+
+            .css-rule-value {
+                @apply text-stone-800;
             }
         }
     }

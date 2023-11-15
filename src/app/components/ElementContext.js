@@ -3,18 +3,18 @@
 import { createContext, useState } from 'react';
 
 export const ElementContext = createContext({
-    classes: [],
-    setClasses: () => { },
+    editorClasses: [],
+    setEditorClasses: () => { },
 
-    initialClasses: [],
-    setInitialClasses: () => { }
+    composerClasses: [],
+    setComposerClasses: () => { }
 });
 
 
 export function ElementContextProvider({ children }) {
-    const [classes, setClasses] = useState([]);
-    const [initialClasses, setInitialClasses] = useState([]);
-    const value = { classes, setClasses, initialClasses, setInitialClasses };
+    const [editorClasses, setEditorClasses] = useState([]);
+    const [composerClasses, setComposerClasses] = useState([]);
+    const value = { editorClasses, setEditorClasses, composerClasses, setComposerClasses };
 
     return (
         <ElementContext.Provider value={value}>

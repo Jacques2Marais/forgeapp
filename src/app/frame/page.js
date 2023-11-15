@@ -13,8 +13,17 @@ export default function Frame() {
 
         // callback for "message" event
         function onMessage(event) {
+            console.log(event.data);
+
             // process message from parent window
             currentElement.current = logic(currentElement.current, event.data, rootElement.current);
+
+            if (event.data.type === 'select-element') {
+                window.parent.postMessage({
+                    type: 'broadcast-element-info',
+                    className: currentElement.current.className
+                });
+            }
         }
 
         // listener for "message" event

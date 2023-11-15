@@ -3,6 +3,11 @@
 import { ChevronRight } from 'lucide-react';
 import { useEffect, useRef, useState, useReducer, useContext } from 'react';
 import { ElementContext } from './ElementContext';
+import SearchInput from './SearchInput';
+import { getElementTypes } from '@/lib/user-storage';
+import { tw, twRules } from '@/lib/db';
+import Tooltip from './Tooltip';
+import ClassInput from './ClassInput';
 
 function containsSelected(dataArray) {
     for (const item of dataArray) {
@@ -114,6 +119,9 @@ export default function ElementComposer({ frameRef = useRef(null) }) {
         // was previous reference a text element (append after)?
         const wasTextElement = treeReference.current.elementType === "text";
 
+        // get the entered class name
+        const className = elementClassInput.current.value;
+
         // create new child to add to tree
         const newObject = {
             elementType,
@@ -138,9 +146,6 @@ export default function ElementComposer({ frameRef = useRef(null) }) {
         // update physical view of tree
         setTreeView(structuredClone(tree.current));
 
-        // get the entered class name
-        const className = elementClassInput.current.value;
-
         // post message of action to iframe
         frameRef.current.contentWindow.postMessage({
             type: 'create-element',
@@ -150,8 +155,8 @@ export default function ElementComposer({ frameRef = useRef(null) }) {
             index: elementIndex.current++
         });
 
-        // set context of initial classes
-        elementContext.setInitialClasses(className.split(" "));
+        // set context of composer classes
+        elementContext.setComposerClasses(className.split(" "));
 
         // clear values and focus on type input
         elementTypeInput.current.value = '';
@@ -183,16 +188,49 @@ export default function ElementComposer({ frameRef = useRef(null) }) {
         }
     }
 
+    const [twPopupPosition, setTwPopupPosition] = useState({x: 0, y: 0});
+    const [twPopupVisible, setTwPopupVisible] = useState(false);
+    const [twPopupContent, setTwPopupContent] = useState('');
+
+    function classMouseEnter(event, item) {
+        const rect = event.target.getBoundingClientRect();
+
+        setTwPopupPosition({
+            x: event.clientX + 8,
+            y: rect.top + event.target.offsetHeight
+        });
+        setTwPopupContent(twRules[item.refIndex].replace(/\:/g, ": "));
+        setTwPopupVisible(true);
+    }
+
+    function classMouseLeave() {
+        setTwPopupVisible(false);
+    }
+
     return (
         <div className='composer'>
-            <form ref={formRef} onSubmit={addElement} className='composer-form'>
+            <form autoComplete='off' ref={formRef} onSubmit={addElement} className='composer-form'>
                 <div className='input-group'>
                     <label htmlFor="elementType">Type of Element</label>
-                    <input placeholder='Element type' id='elementType' onInput={onTypeInput} ref={elementTypeInput} />
+                    <SearchInput items={getElementTypes()} placeholder='Element type' id='elementType' onInput={onTypeInput} ref={elementTypeInput} />
+                    {/* <input placeholder='Element type' id='elementType' onInput={onTypeInput} ref={elementTypeInput} /> */}
                 </div>
                 <div className='input-group'>
-                    <label htmlFor="elementClasses">Element's Classes</label>
-                    <input placeholder='Classes' id='elementClasses' ref={elementClassInput} />
+                    <label htmlFor="composerClasses">Element's Classes</label>
+                    <ClassInput 
+                        id='composerClasses'
+                        ref={elementClassInput} />
+                    {/* <SearchInput 
+                        items={tw} delimiter=' ' 
+                        placeholder='Classes' id='elementClasses' ref={elementClassInput}
+                        onResultMouseEnter={classMouseEnter} 
+                        onResultMouseLeave={classMouseLeave} />
+                    <Tooltip visible={twPopupVisible} x={twPopupPosition.x} y={twPopupPosition.y}>
+                        {twPopupContent.split(';').map((rule, index) => {
+                            return (<span className='block' key={index}>{rule}</span>)
+                        })}
+                    </Tooltip> */}
+                    {/* <input placeholder='Classes' id='elementClasses' ref={elementClassInput} /> */}
                 </div>
                 <div className='input-group'>
                     <label htmlFor="elementContent">Element's Inner Text</label>
